@@ -1,0 +1,5 @@
+repo: f911270590cc40ddf350c888727f780218de8eaa
+node: bb7a38f326e71e63b986d67e38d515a4f4b42b8f
+branch: default
+latesttag: ion-2.2.1b
+latesttagdistance: 75
