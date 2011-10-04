@@ -1,5 +1,5 @@
 repo: f911270590cc40ddf350c888727f780218de8eaa
-node: a8b7c40b461f5f6afe04f4a80f2bdbb2d135c639
-branch: default
-latesttag: ion-2.4.2
-latesttagdistance: 18
+node: 480f9503ec1c594dfde11e9f72ce4061f5797c4a
+branch: ion-2.5-dev
+latesttag: ion-2.5.0
+latesttagdistance: 13
