@@ -1,4 +1,4 @@
 repo: f911270590cc40ddf350c888727f780218de8eaa
-node: f932d9d8afc4bff382d017fca40b0fe68b89b4fb
+node: b41c71b1576ab9c4ba7fca0571f1563023ab5927
 branch: ion-2.5-dev
-tag: ion-2.5.2
+tag: ion-2.5.3
