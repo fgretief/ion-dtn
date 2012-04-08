@@ -190,11 +190,11 @@ static int	enqueueBundle(Bundle *bundle, Object bundleObj)
 	/*	If dynamic routing succeeded in enqueuing the bundle
 	 *	to a neighbor, accept the bundle and return.		*/
 
-	if (sdr_list_length(sdr, bundle->xmitRefs) > 0)
+	if (bundle->ductXmitElt)
 	{
 		/*	Enqueued.					*/
 
-		return bpAccept(bundle);
+		return bpAccept(bundleObj, bundle);
 	}
 
 	/*	No luck using the contact graph to compute a route
@@ -208,11 +208,11 @@ static int	enqueueBundle(Bundle *bundle, Object bundleObj)
 		return -1;
 	}
 
-	if (sdr_list_length(sdr, bundle->xmitRefs) > 0)
+	if (bundle->ductXmitElt)
 	{
 		/*	Enqueued.					*/
 
-		return bpAccept(bundle);
+		return bpAccept(bundleObj, bundle);
 	}
 
 	/*	Destination isn't a neighbor that accepts bundles.
@@ -227,6 +227,7 @@ static int	enqueueBundle(Bundle *bundle, Object bundleObj)
 		/*	Found directive; forward via the indicated
 		 *	endpoint.					*/
 
+		sdr_write(sdr, bundleObj, (char *) &bundle, sizeof(Bundle));
 		sdr_string_read(sdr, eidString, directive.eid);
 		return forwardBundle(bundleObj, bundle, eidString);
 	}
@@ -245,11 +246,11 @@ static int	enqueueBundle(Bundle *bundle, Object bundleObj)
 		}
 	}
 
-	if (sdr_list_length(sdr, bundle->xmitRefs) > 0)
+	if (bundle->ductXmitElt)
 	{
 		/*	Enqueued to limbo.				*/
 
-		return bpAccept(bundle);
+		return bpAccept(bundleObj, bundle);
 	}
 	else
 	{
@@ -286,6 +287,7 @@ int	main(int argc, char *argv[])
 		return 1;
 	}
 
+	cgr_start();
 	sdr = getIonsdr();
 	findScheme("ipn", &vscheme, &vschemeElt);
 	if (vschemeElt == 0)
@@ -343,7 +345,6 @@ int	main(int argc, char *argv[])
 			continue;
 		}
 
-		sdr_write(sdr, bundleAddr, (char *) &bundle, sizeof(Bundle));
 		if (sdr_end_xn(sdr) < 0)
 		{
 			putErrmsg("Can't enqueue bundle.", NULL);

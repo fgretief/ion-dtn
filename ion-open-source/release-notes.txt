@@ -1,7 +1,7 @@
 
-= Release Notes for ION 2.5.3 =
+= Release Notes for ION 2.5.0 =
 
-January 29, 2012
+March 20, 2012
 
 %%%%%%%%%%%
 = GENERAL =
@@ -53,6 +53,82 @@ Features included:
 - brs - Bundle relay service: provides interconnectivity between networks
   that do not allow servers (those behind NAT for example). For more
   information, check man brsscla and man brsccla.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+= NOTES ON RELEASE 3.0.0 =
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+- Issue #242: Removed unnecessary recursion from the CGR implementation to help
+  protect against overflows from incorrect configurations.
+
+- Issue #262: ION is now wired with a rudimentary instrumentation framework for
+  insight into run-time status, including bundle processing statistics and node
+  state metrics.  This is in preparation for standardized network management. 
+
+- Issue #302: Implemented red-black trees as an alternative data structure to
+  linked lists for some performance-sensitive applications.  Migrated the BP
+  timeline to use red-black trees.
+
+- Issue #304: Optimized CGR route computation by developing a new algorithm that
+  employs Dijkstra's Algorithm.
+
+- Issue #308: Several updates to ION's Payload Integrity Blocks (PIB) and
+  Payload Confidentiality Blocks (PCB):
+    - Bundle Security Protocol (BSP) utilities now support PIB and PCB.
+    - PIB and PCB extension block code has been added.
+    - Roughly 40 new test cases for PIB, PCB, and BAB combinations have been
+      introduced.
+
+- Issue #311: Bundle Streaming Service (BSS) support has been added to ION.
+  BSS passes "real-time" bundle payloads to an application callback while also
+  storing the bundle payloads to a database for user-directed playback.
+
+- Issue #314: Standardized spelling of the word "semaphore" throughout the ION
+  codebase.
+
+- Issue #322: Improved reliability for custodial retransmissions when the next
+  custodian is a neighbor by making the following tweaks in libbpP.c:
+    - Changed the bpDequeue "stewardship accepted" flag to a custodial timeout
+      interval value (in seconds) that is computed by the CL output daemon,
+      based on CL-specific knowledge, in the event that the CL protocol is not
+      reliable and therefore can't accept stewardship of the bundle. 
+    - Added the same custodial timeout interval value to bpHandleXmitSuccess, to
+      trigger reforwarding of the bundle even when stewardship has been taken
+      and CL transmission has been nominally successful and reliable, in the
+      event that the CL transmission ultimately (unexpectedly) does not succeed.
+
+- Issue #325: Fixed a bug that could cause ION to crash when sending bundles for
+  which the destination endpoint is not a singleton.
+
+- Issue #329: ION now supports sending (rather than just receiving) fragmented
+  bundles.  (NOTE: this entailed several changes to the ZCO API.) 
+
+- Issue #339: Aggregate Custody Signals (ACS) have been added to ION.
+    - ACS is a technology that combines information from various separate
+      custody signals into a single bundle, which has the potential to save
+      "ack channel" bandwidth.
+    - For more information on ACS, see the following document:
+        <http://bioserve.colorado.edu/bp-acs/draft-kuzminsky-aggregate-custody-signals-02.txt>
+  
+- Issue #342: Changed several invocations of lyst_create() to
+  lyst_create_using(), to ensure that ION’s private memory management is always
+  used.
+
+- Issue #343: Fixed bugs in LTP that could cause crashes at high data loss rates
+    - Fixed mechanisms for preventing resurrection of closed Import sessions.
+    - Fixed issue where the same report number could become assigned to two
+      different reports, resulting in link service daemons crashing.
+
+- Issue #344: Added a "-t <ttl>" command line parameter to set the time-to-live
+  for bundles sent from the bpsource application.  Previously bundles were
+  hard-coded with lifetimes of 300 seconds, which is now the default if the TTL
+  is not explicitly specified.
+
+- Issue #345: The ION Deployment Guide is now bundled with ION.  It provides
+  FAQ-style documentation for helping new users familiarize themselves with ION.
+
+- Issue #347: Fixed bug in re-establishing connectivity via TCPCL when a node
+  shuts down and then restarts.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 = NOTES ON RELEASE 2.5.3 =
@@ -127,12 +203,12 @@ Features included:
   wild-carded EID signifying "all endpoints at the indicated node".
  
 - Issue #300: Fixed several bugs in ipnfw:
-     - lookupRule() function of libipnfw.c incorrectly used srcServiceNbr
-       instead of srcNodeNbr.
-     - Several IPN function calls in ipnadmin.c have been wrapped in
-       sdr_begin_xn/sdr_exit_xn blocks to protect against assertion failures.
-     - Before putting a bundle into the Limbo list, ipnfw now searches for
-       blocked outducts and discards the bundle if none are found.
+    - lookupRule() function of libipnfw.c incorrectly used srcServiceNbr
+      instead of srcNodeNbr.
+    - Several IPN function calls in ipnadmin.c have been wrapped in
+      sdr_begin_xn/sdr_exit_xn blocks to protect against assertion failures.
+    - Before putting a bundle into the Limbo list, ipnfw now searches for
+      blocked outducts and discards the bundle if none are found.
  
 - Issue #301: Fixed issue where Ctl+C no longer terminated the bpsink and
   bprecvfile utilities.
@@ -290,6 +366,7 @@ Features included:
 
 - Issue #277: Fixed 3-node-stcp-ltp configuration to remove an unintentional
   connection between nodes 1 and 3.
+
 
 - Issue #278: Updated various test configuration files to have more recent
   contact times.

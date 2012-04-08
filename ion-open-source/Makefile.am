@@ -16,7 +16,8 @@ AM_CFLAGS = \
 	-I$(srcdir)/dgr/include \
 	-I$(srcdir)/bp/include \
 	-I$(srcdir)/ams/include \
-	-I$(srcdir)/cfdp/include
+	-I$(srcdir)/cfdp/include \
+	-I$(srcdir)/bss/include
 #	-I$(srcdir)/icix/include
 
 # This will add CFLAGS to make the valgrind macros compile without
@@ -54,7 +55,8 @@ EXTRA_DIST = 	\
 	$(dgrextra) \
 	$(bpextra) \
 	$(amsextra) \
-	$(cfdpextra)
+	$(cfdpextra) \
+	$(bssextra)
 #	$(icixextra) 
 #	$(usercontribextra)
 #	$(twonodestcp_DATA) \
@@ -125,6 +127,7 @@ build-man-directories:
 	mkdir -p $(top_builddir)/dgr/doc
 	mkdir -p $(top_builddir)/bp/doc
 	mkdir -p $(top_builddir)/cfdp/doc
+	mkdir -p $(top_builddir)/bss/doc
 #	mkdir -p $(top_builddir)/icix/doc
 
 bin_PROGRAMS = \
@@ -133,7 +136,8 @@ bin_PROGRAMS = \
 	$(dgrbin) \
 	$(bpbin) \
 	$(amsbin) \
-	$(cfdpbin)
+	$(cfdpbin) \
+	$(bssbin)
 #	$(usercontribbin)
 #	$(icixbin)
 #	yeah, icix text programs are still excluded from makefile.
@@ -144,7 +148,8 @@ lib_LTLIBRARIES = \
 	$(dgrlib) \
 	$(bplib) \
 	$(amslib) \
-	$(cfdplib)
+	$(cfdplib) \
+	$(bsslib)
 #	$(icixlib)
 
 include_HEADERS = \
@@ -153,7 +158,8 @@ include_HEADERS = \
 	$(dgrinclude) \
 	$(bpinclude) \
 	$(amsinclude) \
-	$(cfdpinclude)
+	$(cfdpinclude) \
+	$(bssinclude)
 #	$(icixinclude)
 
 noinst_HEADERS = \
@@ -162,7 +168,8 @@ noinst_HEADERS = \
 	$(dgrnoinst) \
 	$(bpnoinst) \
 	$(amsnoinst) \
-	$(cfdpnoinst)
+	$(cfdpnoinst) \
+	$(bssnoinst)
 #	$(icixnoinst) 
 #	$(usercontribnoinst)
 
@@ -172,7 +179,8 @@ man_MANS = \
 	$(ltpmans) \
 	$(dgrmans) \
 	$(bpmans) \
-	$(cfdpmans)
+	$(cfdpmans) \
+	$(bssmans)
 #	$(icixmans)
 
 #################
@@ -349,7 +357,8 @@ iciinclude = \
 	ici/include/sdrlist.h \
 	ici/include/sdrtable.h \
 	ici/include/sdrhash.h \
-	ici/include/sdr.h
+	ici/include/sdr.h \
+	ici/include/smrbt.h
 
 icinoinst = \
 	ici/library/lystP.h \
@@ -450,6 +459,7 @@ libici_la_SOURCES =	ici/library/llcv.c \
 			ici/library/ion.c \
 			ici/library/ionsec.c \
 			ici/library/zco.c \
+			ici/library/smrbt.c \
 			ici/sdr/sdrxn.c \
 			ici/sdr/sdrmgt.c \
 			ici/sdr/sdrstring.c \
@@ -457,6 +467,7 @@ libici_la_SOURCES =	ici/library/llcv.c \
 			ici/sdr/sdrtable.c \
 			ici/sdr/sdrhash.c \
 			ici/sdr/sdrcatlg.c
+
 
 libici_la_CFLAGS = $(icicflags) $(AM_CFLAGS)
 libici_la_LDFLAGS = $(ION_LINK_FLAGS)
@@ -810,7 +821,9 @@ bpbin = \
 	bprecvfile \
 	bpclock \
 	ipnadmin \
+	bssadmin \
 	ipnfw \
+	bssfw \
 	ipnadminep \
 	dtn2admin \
 	dtn2fw \
@@ -837,10 +850,17 @@ bpbin = \
 	bpchat \
 	hmackeys
 
+if ENABLE_BPACS
+bpbin += acsadmin \
+	acslist
+endif
+
+
 bplib = \
 	libbp.la \
 	libcgr.la \
 	libipnfw.la \
+	libbssfw.la \
 	libdtn2fw.la \
 	libtcpcla.la \
 	libudpcla.la
@@ -857,6 +877,7 @@ bpinclude = \
 bpnoinst = \
 	bp/library/bpP.h \
 	bp/ipn/ipnfw.h \
+	bp/bss/bssfw.h \
 	bp/dtn2/dtn2fw.h \
 	bp/brs/brscla.h \
 	bp/udp/udpcla.h \
@@ -888,7 +909,9 @@ bpextra = \
 	bp/doc/pod1/dtn2fw.pod \
 	bp/doc/pod1/ipnadminep.pod \
 	bp/doc/pod1/ipnadmin.pod \
+	bp/doc/pod1/bssadmin.pod \
 	bp/doc/pod1/ipnfw.pod \
+	bp/doc/pod1/bssfw.pod \
 	bp/doc/pod1/lgagent.pod \
 	bp/doc/pod1/lgsend.pod \
 	bp/doc/pod1/ltpcli.pod \
@@ -907,6 +930,7 @@ bpextra = \
 	bp/doc/pod1/hmackeys.pod \
 	bp/doc/pod5/bprc.pod \
 	bp/doc/pod5/ipnrc.pod \
+	bp/doc/pod5/bssrc.pod \
 	bp/doc/pod5/dtn2rc.pod \
 	bp/doc/pod5/lgfile.pod \
 	bp/doc/pod3/bp.pod \
@@ -921,6 +945,10 @@ bpextra = \
 	bp/library/ext/bsp/extbsputil.c \
 	bp/library/ext/bsp/extbspbab.h \
 	bp/library/ext/bsp/extbspbab.c \
+	bp/library/ext/bsp/extbsppcb.h \
+	bp/library/ext/bsp/extbsppcb.c \
+	bp/library/ext/bsp/extbsppib.h \
+	bp/library/ext/bsp/extbsppib.c \
 	bp/library/crypto/crypto.h 
 
 # noextensions.c is C code, but it isn't explicitly compiled.
@@ -951,7 +979,9 @@ bpmans = \
 	$(top_builddir)/bp/doc/dtn2fw.1 \
 	$(top_builddir)/bp/doc/ipnadminep.1 \
 	$(top_builddir)/bp/doc/ipnadmin.1 \
+	$(top_builddir)/bp/doc/bssadmin.1 \
 	$(top_builddir)/bp/doc/ipnfw.1 \
+	$(top_builddir)/bp/doc/bssfw.1 \
 	$(top_builddir)/bp/doc/lgagent.1 \
 	$(top_builddir)/bp/doc/lgsend.1 \
 	$(top_builddir)/bp/doc/ltpcli.1 \
@@ -970,10 +1000,19 @@ bpmans = \
 	$(top_builddir)/bp/doc/hmackeys.1 \
 	$(top_builddir)/bp/doc/bprc.5 \
 	$(top_builddir)/bp/doc/ipnrc.5 \
+	$(top_builddir)/bp/doc/bssrc.5 \
 	$(top_builddir)/bp/doc/dtn2rc.5 \
 	$(top_builddir)/bp/doc/lgfile.5 \
 	$(top_builddir)/bp/doc/bp.3 \
 	$(top_builddir)/bp/doc/bpextensions.3
+
+if ENABLE_BPACS
+bpmans += \
+	$(top_builddir)/bp/doc/acsadmin.1 \
+	$(top_builddir)/bp/doc/acslist.1 \
+	$(top_builddir)/bp/doc/acsrc.5
+endif
+
 
 bpclean-local:
 	rm -f $(top_builddir)/bp/doc/*.1
@@ -995,6 +1034,11 @@ libipnfw_la_SOURCES = bp/ipn/libipnfw.c
 libipnfw_la_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 libipnfw_la_LDFLAGS = $(ION_LINK_FLAGS)
 libipnfw_la_LIBADD = libbp.la libici.la
+
+libbssfw_la_SOURCES = bp/bss/libbssfw.c 
+libbssfw_la_CFLAGS = $(bpcflags) $(AM_CFLAGS)
+libbssfw_la_LDFLAGS = $(ION_LINK_FLAGS)
+libbssfw_la_LIBADD = libbp.la libici.la
 
 libdtn2fw_la_SOURCES = bp/dtn2/libdtn2fw.c
 libdtn2fw_la_CFLAGS = $(bpcflags) $(AM_CFLAGS)
@@ -1020,6 +1064,8 @@ libbp_la_SOURCES = \
 	bp/library/bei.c \
 	bp/library/ext/bsp/extbsputil.c \
 	bp/library/ext/bsp/extbspbab.c \
+	bp/library/ext/bsp/extbsppcb.c \
+	bp/library/ext/bsp/extbsppib.c \
 	bp/library/crypto/NULL_SUITES/crypto.c 
 libbp_la_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 libbp_la_LDFLAGS = $(ION_LINK_FLAGS)
@@ -1035,6 +1081,17 @@ libbp_la_LIBADD = libici.la $(PTHREAD_LIBS)
 #libphn_la_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 #libphn_la_LDFLAGS = $(ION_LINK_FLAGS)
 
+if ENABLE_BPACS
+libbp_la_SOURCES += \
+	bp/library/acs/acsrx.c \
+	bp/library/acs/acstx.c \
+	bp/library/acs/acsserialize.c \
+	bp/library/acs/acsappend.c \
+	bp/library/acs/acsid.c \
+	bp/library/ext/cteb/cteb.c \
+	$(NULL)
+endif
+
 libcgr_la_SOURCES = bp/cgr/libcgr.c
 libcgr_la_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 libcgr_la_LDFLAGS = $(ION_LINK_FLAGS)
@@ -1049,6 +1106,20 @@ bpadmin_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 ipnadmin_SOURCES = bp/ipn/ipnadmin.c
 ipnadmin_LDADD = libipnfw.la libbp.la libici.la $(LIBOBJS) 
 ipnadmin_CFLAGS = $(bpcflags) $(AM_CFLAGS)
+
+bssadmin_SOURCES = bp/bss/bssadmin.c
+bssadmin_LDADD = libbssfw.la libbp.la libici.la $(LIBOBJS) 
+bssadmin_CFLAGS = $(bpcflags) $(AM_CFLAGS)
+
+if ENABLE_BPACS
+acsadmin_SOURCES = bp/utils/acsadmin.c
+acsadmin_LDADD = libbp.la libici.la $(LIBOBJS)
+acsadmin_CFLAGS = $(bpcflags) $(AM_CFLAGS)
+
+acslist_SOURCES = bp/utils/acslist.c
+acslist_LDADD = libbp.la libici.la $(LIBOBJS)
+acslist_CFLAGS = $(bpcflags) $(AM_CFLAGS)
+endif
 
 dtn2admin_SOURCES = bp/dtn2/dtn2admin.c
 dtn2admin_LDADD = libdtn2fw.la libbp.la libici.la $(LIBOBJS) 
@@ -1092,6 +1163,17 @@ ipnadminep_SOURCES = bp/ipn/ipnadminep.c
 ipnadminep_LDADD = libipnfw.la libbp.la libici.la $(LIBOBJS)
 ipnadminep_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 
+# --- BSS Executables --- #
+
+bssfw_SOURCES = bp/bss/bssfw.c
+bssfw_LDADD = libbssfw.la libcgr.la libbp.la libici.la $(LIBOBJS)
+bssfw_CFLAGS = $(bpcflags) $(AM_CFLAGS)
+
+#this is where bssadminep stuff would go if it existed
+#ipnadminep_SOURCES = bp/ipn/ipnadminep.c
+#ipnadminep_LDADD = libipnfw.la libbp.la libici.la $(LIBOBJS)
+#ipnadminep_CFLAGS = $(bpcflags) $(AM_CFLAGS)
+
 # --- DTN Executables --- #
 
 dtn2fw_SOURCES = bp/dtn2/dtn2fw.c
@@ -1105,7 +1187,7 @@ dtn2adminep_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 # --- LTP Executables --- #
 
 ltpcli_SOURCES = bp/ltp/ltpcli.c
-ltpcli_LDADD = libipnfw.la libdtn2fw.la libbp.la libltp.la libici.la $(LIBOBJS) 
+ltpcli_LDADD = libipnfw.la libbssfw.la libdtn2fw.la libbp.la libltp.la libici.la $(LIBOBJS) 
 ltpcli_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 
 ltpclo_SOURCES = bp/ltp/ltpclo.c
@@ -1115,7 +1197,7 @@ ltpclo_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 # --- TCP Executables --- #
 
 tcpcli_SOURCES = bp/tcp/tcpcli.c
-tcpcli_LDADD = libipnfw.la libdtn2fw.la libbp.la libtcpcla.la libici.la $(LIBOBJS) 
+tcpcli_LDADD = libipnfw.la libbssfw.la libdtn2fw.la libbp.la libtcpcla.la libici.la $(LIBOBJS) 
 tcpcli_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 
 tcpclo_SOURCES = bp/tcp/tcpclo.c
@@ -1125,7 +1207,7 @@ tcpclo_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 # --- STCP Executables --- #
 
 stcpcli_SOURCES = bp/tcp/stcpcli.c
-stcpcli_LDADD = libipnfw.la libdtn2fw.la libbp.la libtcpcla.la libici.la $(LIBOBJS) 
+stcpcli_LDADD = libipnfw.la libbssfw.la libdtn2fw.la libbp.la libtcpcla.la libici.la $(LIBOBJS) 
 stcpcli_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 
 stcpclo_SOURCES = bp/tcp/stcpclo.c
@@ -1135,7 +1217,7 @@ stcpclo_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 # --- UDP Executables --- #
 
 udpcli_SOURCES = bp/udp/udpcli.c
-udpcli_LDADD = libipnfw.la libdtn2fw.la libbp.la libudpcla.la libici.la $(LIBOBJS) 
+udpcli_LDADD = libipnfw.la libbssfw.la libdtn2fw.la libbp.la libudpcla.la libici.la $(LIBOBJS) 
 udpcli_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 
 udpclo_SOURCES = bp/udp/udpclo.c
@@ -1145,7 +1227,7 @@ udpclo_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 # --- DCCP Executables --- #
 
 dccpcli_SOURCES = bp/dccp/dccpcli.c
-dccpcli_LDADD = libipnfw.la libdtn2fw.la libbp.la libici.la $(LIBOBJS) 
+dccpcli_LDADD = libipnfw.la libbssfw.la libdtn2fw.la libbp.la libici.la $(LIBOBJS) 
 dccpcli_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 
 dccpclo_SOURCES = bp/dccp/dccpclo.c
@@ -1155,17 +1237,17 @@ dccpclo_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 # --- DGR Executables --- #
 
 dgrcla_SOURCES = bp/dgr/dgrcla.c
-dgrcla_LDADD = libipnfw.la libdtn2fw.la libbp.la libdgr.la libici.la $(LIBOBJS) 
+dgrcla_LDADD = libipnfw.la libbssfw.la libdtn2fw.la libbp.la libdgr.la libici.la $(LIBOBJS) 
 dgrcla_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 
 # --- BRS executables --- #
 
 brsscla_SOURCES = bp/brs/brsscla.c
-brsscla_LDADD = libipnfw.la libdtn2fw.la libbp.la libtcpcla.la libici.la $(LIBOBJS) 
+brsscla_LDADD = libipnfw.la libbssfw.la libdtn2fw.la libbp.la libtcpcla.la libici.la $(LIBOBJS) 
 brsscla_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 
 brsccla_SOURCES = bp/brs/brsccla.c
-brsccla_LDADD = libipnfw.la libdtn2fw.la libbp.la libtcpcla.la libici.la $(LIBOBJS) 
+brsccla_LDADD = libipnfw.la libbssfw.la libdtn2fw.la libbp.la libtcpcla.la libici.la $(LIBOBJS) 
 brsccla_CFLAGS = $(bpcflags) $(AM_CFLAGS)
 
 # --- Test Executables --- #
@@ -1417,6 +1499,76 @@ cfdptest_CFLAGS = $(cfdpcflags) $(AM_CFLAGS)
 cfdpclock_SOURCES = cfdp/daemon/cfdpclock.c
 cfdpclock_LDADD = libcfdp.la libici.la libbp.la $(LIBOBJS)
 cfdpclock_CFLAGS = $(cfdpcflags) $(AM_CFLAGS)
+
+
+
+##############
+#
+# BSS SECTION
+#
+##############
+
+# Define pod2man stuff
+bssPODM1 = pod2man -s 1 -c "BSS executables"
+bssPODM3 = pod2man -s 3 -c "BSS library functions"
+#cfdpPODM5 = pod2man -s 5 -c "CFDP configuration files"
+#cfdpPODH = pod2html --noindex
+
+bsscflags = -I$(srcdir)/bss/library -I$(srcdir)/bss/include 
+
+bssbin = \
+	bssrecv \
+	bssStreamingApp
+
+bsslib = \
+	libbss.la
+
+bssinclude = \
+	bss/include/bss.h
+
+bssnoinst = \
+	bss/library/bssP.h
+
+bssextra = \
+	bss/doc/pod1/bssrecv.pod \
+	bss/doc/pod1/bssStreamingApp.pod \
+	bss/doc/pod3/bss.pod \
+	bss/README.txt
+
+bssmans = \
+	$(top_builddir)/bss/doc/bssrecv.1 \
+	$(top_builddir)/bss/doc/bssStreamingApp.1 \
+	$(top_builddir)/bss/doc/bss.3
+
+bssclean-local:
+	rm -f $(top_builddir)/bss/doc/*.1
+	rm -f $(top_builddir)/bss/doc/*.3
+
+$(top_builddir)/bss/doc/%.1: bss/doc/pod1/%.pod
+	$(bssPODM1) $< $@
+
+$(top_builddir)/bss/doc/%.3: bss/doc/pod3/%.pod
+	$(bssPODM3) $< $@
+
+# --- Libraries --- #
+
+libbss_la_SOURCES = \
+	bss/library/libbss.c \
+	bss/library/libbssP.c
+libbss_la_CFLAGS = $(bsscflags) $(AM_CFLAGS)
+libbss_la_LDFLAGS = $(ION_LINK_FLAGS)
+libbss_la_LIBADD = libici.la libbp.la
+
+# --- Test Programs --- #
+
+bssrecv_SOURCES = bss/test/bssrecv.c
+bssrecv_LDADD = libbss.la libici.la libbp.la $(LIBOBJS)
+bssrecv_CFLAGS = $(bsscflags) $(AM_CFLAGS)
+
+bssStreamingApp_SOURCES = bss/test/bssStreamingApp.c
+bssStreamingApp_LDADD = libbss.la libici.la libbp.la $(LIBOBJS)
+bssStreamingApp_CFLAGS = $(bsscflags) $(AM_CFLAGS)
+
 
 ##############
 #
