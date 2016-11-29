@@ -1,4 +1,5 @@
 repo: f911270590cc40ddf350c888727f780218de8eaa
-node: 80e573c77060b17e8a6b5a07cc26eeeb6d8193fd
-branch: ion-3.4-dev
-tag: ion-3.4.1
+node: 2c521e07c091aae95cf51ed7c382e63d0aa49e93
+branch: integration-3.5.0
+latesttag: ion-3.4.1
+latesttagdistance: 58
