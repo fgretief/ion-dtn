@@ -1,6 +1,6 @@
 repo: f911270590cc40ddf350c888727f780218de8eaa
-node: e642e7a5846dcb674151b5133c44db199471edda
-branch: integration-3.7.0
-latesttag: ion-3.7.0
+node: a2d3ac34b5b0fede077f063991a0c51ca63d81e5
+branch: ion-3.7.1-release
+latesttag: IOS-3.7.1
 latesttagdistance: 1
 changessincelatesttag: 1
