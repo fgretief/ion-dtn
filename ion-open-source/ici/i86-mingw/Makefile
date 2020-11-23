@@ -7,7 +7,7 @@ SDR = ../sdr
 CRYPTO = ../crypto/NULL_SUITES
 BULK = ../bulk/STUB_BULK
 
-OPT = -g -Wall -Dmingw -DVNAME=ION-OPEN-SOURCE-3.7.1
+OPT = -g -Wall -Dmingw -DVNAME=ION-OPEN-SOURCE-3.7.2
 CC = gcc $(OPT) -I$(SRC) -I$(TEST) -I$(SDR) -I$(INCL) -I../crypto -I../../$(BPv)/include/ -I../../$(BPv)/library/ -I../../ltp/include/ -I../../ltp/library/
 LDFLAGS = -fPIC -shared
 LD = gcc $(LDFLAGS)
@@ -214,5 +214,3 @@ libici.dll:	$(LIBICIOBJS) libicinm.o
 
 %.o:		$(TEST)/%.c
 		$(CC) -c $<
-
-
