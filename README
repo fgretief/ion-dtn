@@ -1,0 +1,3 @@
+The Interplanetary Overlay Network (ION) software distribution is an implementation of Delay-Tolerant Networking (DTN) architecture, as described in Internet RFC 4838, that is intended to be usable in embedded environments including spacecraft flight computers.
+
+This repository is a mirror of the source code located here: https://sourceforge.net/projects/ion-dtn/files/
